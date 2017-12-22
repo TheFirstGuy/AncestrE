@@ -3,6 +3,7 @@ package com.fourtwoeight.model;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.UUID;
 
 public class Person {
 
@@ -200,6 +201,37 @@ public class Person {
         this.lastName = lastName;
     }
 
+    /**
+     * @return the description of the person
+     */
+    public String getDescription() {
+        return description;
+    }
+
+    /**
+     * Sets the description of the person
+     * @param description The description of the person
+     */
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    /**
+     * @return The UUID as a string for the person
+     */
+    public String getUUID(){
+        return this.uuid.toString();
+    }
+
+    /**
+     * Sets the UUID for the Person
+     * @param uuid the UUID to give the Person
+     */
+    public void setUUID(UUID uuid){
+        this.uuid = uuid;
+    }
+
+
     // Private Fields ==================================================================================================
 
     /**
@@ -251,4 +283,14 @@ public class Person {
      * The last name of the person
      */
     private String lastName;
+
+    /**
+     * The description of the person.
+     */
+    private String description;
+
+    /**
+     * The unique identifier for the person
+     */
+    private UUID uuid;
 }

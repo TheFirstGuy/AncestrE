@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="GraphsFX">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/../GraphsFX" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/../GraphsFX/src" />
+    </SOURCES>
+  </library>
+</component>
