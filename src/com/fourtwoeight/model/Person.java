@@ -23,12 +23,14 @@ public class Person {
     public Person(String firstName,
                   ArrayList<String> middleNames,
                   String lastName,
+                  SEX sex,
                   Calendar birthDate,
                   Calendar deathDate){
         // Assign parameters
         this.firstName = firstName;
         this.middleNames = middleNames;
         this.lastName = lastName;
+        this.sex = sex;
         this.birthDate = birthDate;
         this.deathDate = deathDate;
     }
@@ -151,6 +153,26 @@ public class Person {
     }
 
     /**
+     * Returns the full name of the person
+     * @return the full name of the person
+     */
+    public String getFullName(){
+        StringBuilder builder = new StringBuilder();
+        builder.append(this.firstName);
+        builder.append(" ");
+
+        // Append Middle names
+        for(String middle: middleNames){
+            builder.append(middle);
+            builder.append(" ");
+        }
+
+        builder.append(this.lastName);
+
+        return builder.toString();
+    }
+
+    /**
      * @return the first name of the person
      */
     public String getFirstName() {
@@ -214,6 +236,35 @@ public class Person {
      */
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    /**
+     * @return The path to the image
+     */
+    public String getImagePath(){
+        return imagePath;
+    }
+
+    /**
+     * @param imagePath the path to the image for the Person
+     */
+    public void setImagePath(String imagePath){
+        this.imagePath = imagePath;
+    }
+
+    /**
+     * @return The sex of the person
+     */
+    public SEX getSex() {
+        return sex;
+    }
+
+    /**
+     * Sets the sex of the person
+     * @param sex the sex of the person
+     */
+    public void setSex(SEX sex) {
+        this.sex = sex;
     }
 
     /**
@@ -288,6 +339,16 @@ public class Person {
      * The description of the person.
      */
     private String description;
+
+    /**
+     * The path to the profile image
+     */
+    private String imagePath;
+
+    /**
+     * The sex of the person
+     */
+    private SEX sex;
 
     /**
      * The unique identifier for the person
