@@ -1,5 +1,6 @@
-package com.fourtwoeight.model;
+package com.fourtwoeight.ancestre.model;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -7,8 +8,12 @@ import java.util.UUID;
 
 public class Person {
 
+
     // Public Static Fields ============================================================================================
     public enum SEX{MALE, FEMALE}
+
+    // Private Static Fields ===========================================================================================
+    private static final String DATE_FORMAT = "MMMMM dd yyyy";
 
     // Public Methods ==================================================================================================
 
@@ -40,6 +45,44 @@ public class Person {
      */
     public boolean isAlive(){
         return deathDate == null;
+    }
+
+    /**
+     * Returns the formatted time period which this Person lived/lives
+     * @return the time period which the Person lived
+     */
+    public String getLifeTime(){
+        StringBuilder builder = new StringBuilder();
+        SimpleDateFormat format = new SimpleDateFormat(DATE_FORMAT);
+        builder.append(format.format(this.birthDate.getTime()));
+        builder.append(" - ");
+
+        if(this.deathDate != null){
+            builder.append(format.format(this.deathDate.getTime()));
+        }
+        else{
+            builder.append("Present");
+        }
+
+        return builder.toString();
+    }
+
+    /**
+     * Returns a list of Persons who are siblings (half siblings included) for this person
+     * @return the list of siblings
+     */
+    public List<Person> getSiblings(){
+        ArrayList<Person> siblings = new ArrayList<>();
+
+        if(this.father != null){
+            siblings.addAll(this.father.getChildren());
+        }
+
+        if(this.mother != null){
+            siblings.addAll(this.mother.getChildren());
+        }
+
+        return siblings;
     }
 
     /**
@@ -270,8 +313,15 @@ public class Person {
     /**
      * @return The UUID as a string for the person
      */
-    public String getUUID(){
+    public String getUUIDString(){
         return this.uuid.toString();
+    }
+
+    /**
+     * @return The UUID for the person
+     */
+    public UUID getUUID(){
+        return this.uuid;
     }
 
     /**
@@ -313,12 +363,12 @@ public class Person {
     /**
      * The list of spouses (including the current spouse this person had)
      */
-    private ArrayList<Person> spouses;
+    private ArrayList<Person> spouses = new ArrayList<Person>();
 
     /**
      * The list of children this person had
      */
-    private ArrayList<Person> children;
+    private ArrayList<Person> children = new ArrayList<Person>();
 
     /**
      * The first name of the person
@@ -328,7 +378,7 @@ public class Person {
     /**
      * The list of middle names this person has
      */
-    private ArrayList<String> middleNames;
+    private ArrayList<String> middleNames = new ArrayList<String>();
 
     /**
      * The last name of the person

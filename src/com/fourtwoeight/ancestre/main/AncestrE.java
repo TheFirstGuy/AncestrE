@@ -1,6 +1,6 @@
-package com.fourtwoeight.main;
+package com.fourtwoeight.ancestre.main;
 
-import com.fourtwoeight.controllers.MainController;
+import com.fourtwoeight.ancestre.controllers.MainController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -11,7 +11,7 @@ public class AncestrE extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("../../../resources/fxml/main.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("../../../../resources/fxml/main.fxml"));
         Parent root = (Parent) fxmlLoader.load();
         MainController mainController = fxmlLoader.<MainController>getController();
         primaryStage.setTitle("AncestrE");

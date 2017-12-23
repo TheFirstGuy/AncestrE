@@ -13,13 +13,14 @@
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.fourtwoeight.controllers.MainController">
+<VBox prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.fourtwoeight.ancestre.controllers.MainController">
   <children>
     <MenuBar VBox.vgrow="NEVER">
       <menus>
@@ -71,7 +72,7 @@
                   <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                </columnResizePolicy>
             </TableView>
-            <Pane fx:id="graphContainer" prefHeight="200.0" prefWidth="200.0" />
+            <Pane fx:id="graphContainer" />
             <VBox fx:id="detailsPane" alignment="TOP_CENTER">
                <children>
                   <ImageView fx:id="portrait" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
@@ -80,7 +81,7 @@
                         <Insets top="10.0" />
                      </padding>
                   </Label>
-                  <Label fx:id="lifetimeLabel" alignment="CENTER" prefHeight="18.0" prefWidth="105.0" text="lifetimeLabel" textAlignment="CENTER" />
+                  <Label fx:id="lifetimeLabel" alignment="CENTER" prefHeight="18.0" prefWidth="300.0" text="lifetimeLabel" textAlignment="CENTER" />
                   <TextArea fx:id="descriptionArea" editable="false" prefHeight="400.0" promptText="Description" style="-fx-background-insets: 0; -fx-background-color: transparent, white, transparent, white;">
                      <VBox.margin>
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />

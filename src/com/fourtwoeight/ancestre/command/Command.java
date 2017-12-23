@@ -1,4 +1,4 @@
-package com.fourtwoeight.command;
+package com.fourtwoeight.ancestre.command;
 
 public interface Command {
 

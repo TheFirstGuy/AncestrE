@@ -1,11 +1,12 @@
-package com.fourtwoeight.controllers;
+package com.fourtwoeight.ancestre.controllers;
 
 
-import com.fourtwoeight.model.Person;
-import static com.fourtwoeight.model.Person.SEX;
-import static com.fourtwoeight.model.Person.SEX.FEMALE;
-import static com.fourtwoeight.model.Person.SEX.MALE;
+import com.fourtwoeight.ancestre.model.Person;
 
+import static com.fourtwoeight.ancestre.model.Person.SEX.FEMALE;
+import static com.fourtwoeight.ancestre.model.Person.SEX.MALE;
+
+import com.fourtwoeight.ancestre.ui.GraphGenerator;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -21,12 +22,15 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 
+import org.graphsfx.graph.CircularReferenceException;
 import org.graphsfx.graph.TreeGraph;
+import org.graphsfx.model.GraphNode;
 
 import java.io.File;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.logging.Logger;
 
 /**
@@ -72,7 +76,37 @@ public class MainController {
                 null
                 );
 
+        Person dad = new Person("Dad",
+                new ArrayList<String>(){{add("E");}},
+                "Evora",
+                MALE,
+                Calendar.getInstance(),
+                null);
+
+        Person mom = new Person("Mom",
+                new ArrayList<String>(),
+                "Evora",
+                FEMALE,
+                Calendar.getInstance(),
+                null);
+
+        me.setDescription("He was a cool guy.\nHe did lots of things.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\ntest");
+        me.setFather(dad);
+        me.setMother(mom);
         setPersonPane(me);
+        setGraphPane(me);
+    }
+
+
+    public void setGraphPane(Person person){
+        try{
+            HashMap<Person, GraphNode> nodes = new HashMap<Person, GraphNode>();
+            GraphGenerator.generateAncestry(person, this.treeGraph, nodes);
+
+        } catch (CircularReferenceException e){
+            LOGGER.warning("Received Exception: " + e.getClass().getName() + " for Person " + person.getFullName());
+        }
+
     }
 
     /**
@@ -81,6 +115,28 @@ public class MainController {
     public void setPersonPane(Person person){
         setPersonImage(person);
         this.nameLabel.setText(person.getFullName());
+        this.lifetimeLabel.setText(person.getLifeTime());
+        descriptionArea.setText(person.getDescription());
+
+        // Add spouses
+        this.spousesList.getItems().clear();
+        for(Person spouse: person.getSpouses()){
+            this.spousesList.getItems().add(spouse.getFullName());
+        }
+
+        // Add Children
+        this.childrenList.getItems().clear();
+        for(Person child: person.getChildren()){
+            this.childrenList.getItems().add(child.getFullName());
+        }
+
+        // Add Siblings
+        this.siblingList.getItems().clear();
+        for(Person sibling: person.getSiblings()){
+            this.siblingList.getItems().add(sibling.getFullName());
+        }
+
+
 
     }
 
@@ -174,6 +230,8 @@ public class MainController {
 
     private TreeGraph treeGraph = new TreeGraph();
 
+
+    private HashMap<Person, GraphNode> nodes;
     private Circle viewport = new Circle(150);
 
     private DoubleProperty portraitCenterX = new SimpleDoubleProperty();
