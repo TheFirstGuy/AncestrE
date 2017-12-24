@@ -11,9 +11,11 @@ public class AncestrE extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
+        stateManager = StateManager.getInstance();
+
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("../../../../resources/fxml/main.fxml"));
-        Parent root = (Parent) fxmlLoader.load();
-        MainController mainController = fxmlLoader.<MainController>getController();
+        Parent root = fxmlLoader.load();
+        MainController mainController = fxmlLoader.getController();
         primaryStage.setTitle("AncestrE");
         primaryStage.setScene(new Scene(root));
         primaryStage.setMaximized(true);
@@ -23,4 +25,8 @@ public class AncestrE extends Application {
     public static void main(String[] args) {
         launch(args);
     }
+
+    // Private Fields ==================================================================================================
+
+    private StateManager stateManager;
 }
