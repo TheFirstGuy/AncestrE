@@ -1,11 +1,15 @@
 package com.fourtwoeight.ancestre.model;
 
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
 
+@XmlRootElement
 public class Person {
 
 
@@ -16,6 +20,11 @@ public class Person {
     private static final String DATE_FORMAT = "MMMMM dd yyyy";
 
     // Public Methods ==================================================================================================
+
+    /**
+     * Default Constructor
+     */
+    public Person(){}
 
     /**
      * Constructor
@@ -88,6 +97,7 @@ public class Person {
     /**
      * @return the current birthday, null if not set
      */
+    @XmlElement
     public Calendar getBirthDate() {
         return birthDate;
     }
@@ -103,6 +113,7 @@ public class Person {
     /**
      * @return the date the person died
      */
+    @XmlElement
     public Calendar getDeathDate() {
         return deathDate;
     }
@@ -218,6 +229,7 @@ public class Person {
     /**
      * @return the first name of the person
      */
+    @XmlElement
     public String getFirstName() {
         return firstName;
     }
@@ -233,6 +245,7 @@ public class Person {
     /**
      * @return the middle names this person has
      */
+    @XmlElement
     public List<String> getMiddleNames() {
         return middleNames;
     }
@@ -254,6 +267,7 @@ public class Person {
     /**
      * @return the last name of the person
      */
+    @XmlElement
     public String getLastName() {
         return lastName;
     }
@@ -269,6 +283,7 @@ public class Person {
     /**
      * @return the description of the person
      */
+    @XmlElement
     public String getDescription() {
         return description;
     }
@@ -291,6 +306,7 @@ public class Person {
     /**
      * @param imagePath the path to the image for the Person
      */
+    @XmlElement
     public void setImagePath(String imagePath){
         this.imagePath = imagePath;
     }
@@ -298,6 +314,7 @@ public class Person {
     /**
      * @return The sex of the person
      */
+    @XmlElement
     public SEX getSex() {
         return sex;
     }
@@ -320,6 +337,7 @@ public class Person {
     /**
      * @return The UUID for the person
      */
+    @XmlAttribute
     public UUID getUUID(){
         return this.uuid;
     }

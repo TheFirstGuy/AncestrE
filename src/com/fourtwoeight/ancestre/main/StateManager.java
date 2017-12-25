@@ -1,7 +1,9 @@
 package com.fourtwoeight.ancestre.main;
 
+import com.fourtwoeight.ancestre.command.Command;
 import com.fourtwoeight.ancestre.model.Family;
 import com.fourtwoeight.ancestre.model.Person;
+import com.fourtwoeight.ancestre.util.CircularStack;
 import org.graphsfx.model.GraphNode;
 
 import java.util.HashMap;
@@ -91,4 +93,15 @@ public class StateManager {
      * The mapping of persons to GraphNode for the current tree displayed on the map
      */
     private HashMap<Person, GraphNode> nodes;
+
+    /**
+     * The Stack of commands that can be undone
+     */
+    CircularStack<Command> undoStack;
+
+    /**
+     * The Stack of commands that can be redone
+     */
+    CircularStack<Command> redoStack;
+
 }

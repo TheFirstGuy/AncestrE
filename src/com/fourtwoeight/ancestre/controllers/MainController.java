@@ -1,12 +1,14 @@
 package com.fourtwoeight.ancestre.controllers;
 
 
+import com.fourtwoeight.ancestre.model.Family;
 import com.fourtwoeight.ancestre.model.Person;
 
 import static com.fourtwoeight.ancestre.model.Person.SEX.FEMALE;
 import static com.fourtwoeight.ancestre.model.Person.SEX.MALE;
 
 import com.fourtwoeight.ancestre.ui.GraphGenerator;
+import com.fourtwoeight.ancestre.util.FileSaver;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -28,9 +30,11 @@ import org.graphsfx.model.GraphNode;
 
 import java.io.File;
 
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.UUID;
 import java.util.logging.Logger;
 
 /**
@@ -76,12 +80,15 @@ public class MainController {
                 null
                 );
 
+        me.setUUID(UUID.randomUUID());
+
         Person dad = new Person("Dad",
                 new ArrayList<String>(){{add("E");}},
                 "Evora",
                 MALE,
                 Calendar.getInstance(),
                 null);
+        dad.setUUID(UUID.randomUUID());
 
         Person mom = new Person("Mom",
                 new ArrayList<String>(),
@@ -89,8 +96,25 @@ public class MainController {
                 FEMALE,
                 Calendar.getInstance(),
                 null);
+        mom.setUUID(UUID.randomUUID());
 
-        me.setDescription("He was a cool guy.\nHe did lots of things.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\ntest");
+        me.setDescription("He was a cool guy.\nHe did lots of things.");
+
+        Family family = new Family("MyFamily");
+        family.addPerson(me);
+        family.addPerson(dad);
+        family.addPerson(mom);
+        System.out.println(family.getFamilyMembers().size());
+        FileSaver fileSaver = new FileSaver();
+
+        try {
+            FileOutputStream fileOut = new FileOutputStream("Person.xml");
+            fileSaver.initialize();
+            fileSaver.saveFamily(family, fileOut);
+        } catch( Exception e){
+
+        }
+
         me.setFather(dad);
         me.setMother(mom);
         setPersonPane(me);

@@ -1,10 +1,32 @@
 package com.fourtwoeight.ancestre.model;
 
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.util.*;
 
+@XmlRootElement
 public class Family {
 
-    // Public Fields ===================================================================================================
+    // Public Methods ==================================================================================================
+
+    /**
+     * Default Constructor
+     */
+    public Family(){}
+
+    /**
+     * Constructor
+     * @param familyName the name of the family
+     */
+    public Family(String familyName){
+        this.familyName = familyName;
+    }
+
+    @XmlAttribute
+    public String getFamilyName(){
+        return this.familyName;
+    }
 
     /**
      * Returns the person mapped to the uuid
@@ -19,6 +41,7 @@ public class Family {
      * Returns a list of family members
      * @return the list of family members
      */
+    @XmlElement
     public List<Person> getFamilyMembers(){
         return new LinkedList<Person>(familyMembers.values());
     }
@@ -40,6 +63,11 @@ public class Family {
         familyMembers.put(person.getUUID(), person);
     }
 
+    /**
+     * Removes a person from the family
+     * @param person the person to remove
+     */
+    public void removePerson(Person person){ familyMembers.remove(person);}
     /**
      * Finds and generates a list of people who are the ancestors for the passed in person
      * @param person the person to get ancestry for
@@ -110,9 +138,7 @@ public class Family {
 
     // Private Fields ==================================================================================================
 
-
-
-
+    private String familyName;
 
     private HashMap<UUID, Person> familyMembers = new HashMap<UUID, Person>();
 }
