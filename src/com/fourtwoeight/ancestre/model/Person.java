@@ -4,10 +4,7 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @XmlRootElement
 public class Person {
@@ -47,6 +44,7 @@ public class Person {
         this.sex = sex;
         this.birthDate = birthDate;
         this.deathDate = deathDate;
+        this.uuid = UUID.randomUUID();
     }
 
     /**
@@ -81,17 +79,26 @@ public class Person {
      * @return the list of siblings
      */
     public List<Person> getSiblings(){
-        ArrayList<Person> siblings = new ArrayList<>();
+        HashSet<Person> siblings = new HashSet<>();
 
+        // Add all children that are not current person!
         if(this.father != null){
-            siblings.addAll(this.father.getChildren());
+            for(Person sibling : this.father.getChildren()){
+                if(sibling != this){
+                    siblings.add(sibling);
+                }
+            }
         }
 
         if(this.mother != null){
-            siblings.addAll(this.mother.getChildren());
+            for(Person sibling : this.mother.getChildren()){
+                if(sibling != this){
+                    siblings.add(sibling);
+                }
+            }
         }
 
-        return siblings;
+        return new ArrayList<>(siblings);
     }
 
     /**
@@ -381,12 +388,12 @@ public class Person {
     /**
      * The list of spouses (including the current spouse this person had)
      */
-    private ArrayList<Person> spouses = new ArrayList<Person>();
+    private ArrayList<Person> spouses = new ArrayList<>();
 
     /**
      * The list of children this person had
      */
-    private ArrayList<Person> children = new ArrayList<Person>();
+    private ArrayList<Person> children = new ArrayList<>();
 
     /**
      * The first name of the person
@@ -396,7 +403,7 @@ public class Person {
     /**
      * The list of middle names this person has
      */
-    private ArrayList<String> middleNames = new ArrayList<String>();
+    private ArrayList<String> middleNames = new ArrayList<>();
 
     /**
      * The last name of the person

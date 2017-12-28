@@ -80,23 +80,33 @@ public class MainController {
                 null
                 );
 
-        me.setUUID(UUID.randomUUID());
-
         Person dad = new Person("Dad",
                 new ArrayList<String>(){{add("E");}},
                 "Evora",
                 MALE,
                 Calendar.getInstance(),
                 null);
-        dad.setUUID(UUID.randomUUID());
 
         Person mom = new Person("Mom",
-                new ArrayList<String>(),
+                new ArrayList<>(),
                 "Evora",
                 FEMALE,
                 Calendar.getInstance(),
                 null);
-        mom.setUUID(UUID.randomUUID());
+
+        Person sister = new Person("Sister",
+                new ArrayList<>(),
+                "Evora",
+                FEMALE,
+                Calendar.getInstance(),
+                null);
+
+        sister.setMother(mom);
+        sister.setFather(dad);
+        dad.addChild(sister);
+        mom.addChild(sister);
+        dad.addChild(me);
+        mom.addChild(me);
 
         me.setDescription("He was a cool guy.\nHe did lots of things.");
 
@@ -104,6 +114,9 @@ public class MainController {
         family.addPerson(me);
         family.addPerson(dad);
         family.addPerson(mom);
+        family.addPerson(sister);
+        me.setFather(dad);
+        me.setMother(mom);
         System.out.println(family.getFamilyMembers().size());
         FileSaver fileSaver = new FileSaver();
 
@@ -115,8 +128,7 @@ public class MainController {
 
         }
 
-        me.setFather(dad);
-        me.setMother(mom);
+
         setPersonPane(me);
         setGraphPane(me);
     }
@@ -124,7 +136,7 @@ public class MainController {
 
     public void setGraphPane(Person person){
         try{
-            HashMap<Person, GraphNode> nodes = new HashMap<Person, GraphNode>();
+            HashMap<Person, GraphNode> nodes = new HashMap<>();
             GraphGenerator.generateAncestry(person, this.treeGraph, nodes);
 
         } catch (CircularReferenceException e){
