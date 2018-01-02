@@ -8,7 +8,7 @@ import static com.fourtwoeight.ancestre.model.Person.SEX.FEMALE;
 import static com.fourtwoeight.ancestre.model.Person.SEX.MALE;
 
 import com.fourtwoeight.ancestre.ui.GraphGenerator;
-import com.fourtwoeight.ancestre.util.FileSaver;
+import com.fourtwoeight.ancestre.util.FileManager;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -34,7 +34,6 @@ import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.UUID;
 import java.util.logging.Logger;
 
 /**
@@ -118,15 +117,37 @@ public class MainController {
         me.setFather(dad);
         me.setMother(mom);
         System.out.println(family.getFamilyMembers().size());
-        FileSaver fileSaver = new FileSaver();
+        FileManager fileManager = new FileManager();
 
         try {
-            FileOutputStream fileOut = new FileOutputStream("Person.xml");
-            fileSaver.initialize();
-            fileSaver.saveFamily(family, fileOut);
-        } catch( Exception e){
+            File file = new File("./");
+            fileManager.initialize();
+            StringBuilder errorMessage = new StringBuilder();
+            if(!fileManager.save(family, "testFamily", file, errorMessage)){
+                System.out.println(errorMessage.toString());
+            }
+            else{
+                System.out.println("Saved");
+            }
 
+            File loadFile = new File("./testFamily.fam");
+            if(!fileManager.load(family, loadFile, errorMessage)){
+                System.out.println(errorMessage.toString());
+            }
+            else{
+                System.out.println("Loaded");
+            }
+
+            if(!fileManager.save(family, "testFamily2", file, errorMessage)){
+                System.out.println(errorMessage.toString());
+            }
+            else{
+                System.out.println("Saved");
+            }
+        } catch( Exception e){
+            System.out.println(e.toString());
         }
+
 
 
         setPersonPane(me);

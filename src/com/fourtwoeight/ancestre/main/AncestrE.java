@@ -7,10 +7,19 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.io.InputStream;
+import java.util.logging.LogManager;
+
 public class AncestrE extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
+
+        final LogManager logManager = LogManager.getLogManager();
+        try(final InputStream inputStream = getClass().getResourceAsStream("../../../../config/logging.properties")){
+            logManager.readConfiguration(inputStream);
+            inputStream.close();
+        }
         stateManager = StateManager.getInstance();
 
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("../../../../resources/fxml/main.fxml"));

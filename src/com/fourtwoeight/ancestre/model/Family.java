@@ -30,10 +30,10 @@ public class Family {
 
     /**
      * Returns the person mapped to the uuid
-     * @param uuid the uuid of the person
+     * @param uuid the uuid string of the person
      * @return the Person mapped to the uuid
      */
-    public Person getPerson(UUID uuid){
+    public Person getPerson(String uuid){
         return familyMembers.get(uuid);
     }
 
@@ -60,7 +60,7 @@ public class Family {
      * @param person the person to add
      */
     public void addPerson(Person person){
-        familyMembers.put(person.getUUID(), person);
+        familyMembers.put(person.getUUIDString(), person);
     }
 
     /**
@@ -140,5 +140,5 @@ public class Family {
 
     private String familyName;
 
-    private HashMap<UUID, Person> familyMembers = new HashMap<UUID, Person>();
+    private HashMap<String, Person> familyMembers = new HashMap<>();
 }
