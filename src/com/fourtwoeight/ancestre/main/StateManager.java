@@ -6,15 +6,29 @@ import com.fourtwoeight.ancestre.model.Person;
 import com.fourtwoeight.ancestre.util.CircularStack;
 import org.graphsfx.model.GraphNode;
 
+import java.io.File;
 import java.util.HashMap;
+import java.util.Queue;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.logging.Logger;
 
-public class StateManager {
+public class StateManager implements Runnable{
 
     // Private Static Fields ===========================================================================================
     /**
      * Singleton instance
      */
     private static StateManager instance = null;
+
+    /**
+     * The Logger for the StateManager
+     */
+    private static Logger LOGGER = Logger.getLogger(StateManager.class.getName());
+
+    /**
+     * The default family save file directory relative path
+     */
+    private static final String DEFAULT_FAMILY_DIRECTORY = "userData/families/";
 
     // Public Static Methods ===========================================================================================
 
@@ -23,7 +37,9 @@ public class StateManager {
      * @return the singleton StateManager
      */
     public static StateManager getInstance(){
+        LOGGER.fine("Getting StateManager instance");
         if(instance == null){
+            LOGGER.finer("Creating new StateManager instance");
             instance = new StateManager();
         }
 
@@ -31,6 +47,34 @@ public class StateManager {
     }
 
     // Public Methods ==================================================================================================
+
+    /**
+     * Loops and executes commands in the command queue
+     */
+    @Override
+    public void run() {
+        while(true){
+            if(!this.commandQueue.isEmpty()){
+                Command command = this.commandQueue.poll();
+                command.execute();
+                this.undoStack.add(command);
+            }
+
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                LOGGER.severe("StateManager thread interrupted. Caught Exception: " + e.toString());
+            }
+        }
+    }
+
+    /**
+     * Adds a command to the command queue
+     * @param command the command to be added
+     */
+    public void addCommand(Command command){
+        this.commandQueue.add(command);
+    }
 
     /**
      * @return the person that is currently selected
@@ -63,6 +107,35 @@ public class StateManager {
     }
 
     /**
+     * @return the family file that corresponds to the currently loaded family
+     */
+    public File getFamilyFile() {
+        return familyFile;
+    }
+
+    /**
+     * Returns the parent directory for the current family file. If no family file is set then returns the default
+     * family directory file.
+     * @return the parent directory for the current family file.
+     */
+    public File getCurrentFamilyDirectory(){
+        if(this.familyFile != null){
+            return this.familyFile.getParentFile();
+        }
+        else{
+            return new File(DEFAULT_FAMILY_DIRECTORY);
+        }
+    }
+
+    /**
+     * Sets the family file which corresponds to the currently loaded family
+     * @param familyFile the family file to set
+     */
+    public void setFamilyFile(File familyFile) {
+        this.familyFile = familyFile;
+    }
+
+    /**
      * @return the map of persons to nodes
      */
     public HashMap<Person, GraphNode> getNodes() {
@@ -75,7 +148,11 @@ public class StateManager {
     /**
      * Constructor
      */
-    protected StateManager(){}
+    protected StateManager(){
+        this.commandQueue = new ArrayBlockingQueue<Command>(100);
+        this.undoStack = new CircularStack<>(100);
+        this.redoStack = new CircularStack<>(100);
+    }
 
 
     // Private Fields ==================================================================================================
@@ -90,9 +167,16 @@ public class StateManager {
     private Family family;
 
     /**
+     * The save file for the family
+     */
+    private File familyFile;
+
+    /**
      * The mapping of persons to GraphNode for the current tree displayed on the map
      */
     private HashMap<Person, GraphNode> nodes;
+
+    Queue<Command> commandQueue;
 
     /**
      * The Stack of commands that can be undone
@@ -103,5 +187,6 @@ public class StateManager {
      * The Stack of commands that can be redone
      */
     CircularStack<Command> redoStack;
+
 
 }

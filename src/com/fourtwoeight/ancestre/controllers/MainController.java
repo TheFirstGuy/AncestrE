@@ -1,6 +1,8 @@
 package com.fourtwoeight.ancestre.controllers;
 
 
+import com.fourtwoeight.ancestre.command.SaveAsCommand;
+import com.fourtwoeight.ancestre.main.StateManager;
 import com.fourtwoeight.ancestre.model.Family;
 import com.fourtwoeight.ancestre.model.Person;
 
@@ -24,10 +26,13 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import org.graphsfx.graph.CircularReferenceException;
 import org.graphsfx.graph.TreeGraph;
 import org.graphsfx.model.GraphNode;
 
+import javax.swing.plaf.nimbus.State;
 import java.io.File;
 
 import java.io.FileOutputStream;
@@ -56,7 +61,9 @@ public class MainController {
     /**
      * Initializes the main screen
      */
-    public void initialize(){
+    public void initialize(Stage stage){
+        this.stage = stage;
+
         // Initialize graph
         this.graphContainer.getChildren().add(treeGraph);
 
@@ -116,39 +123,8 @@ public class MainController {
         family.addPerson(sister);
         me.setFather(dad);
         me.setMother(mom);
-        System.out.println(family.getFamilyMembers().size());
-        FileManager fileManager = new FileManager();
 
-        try {
-            File file = new File("./");
-            fileManager.initialize();
-            StringBuilder errorMessage = new StringBuilder();
-            if(!fileManager.save(family, "testFamily", file, errorMessage)){
-                System.out.println(errorMessage.toString());
-            }
-            else{
-                System.out.println("Saved");
-            }
-
-            File loadFile = new File("./testFamily.fam");
-            if(!fileManager.load(family, loadFile, errorMessage)){
-                System.out.println(errorMessage.toString());
-            }
-            else{
-                System.out.println("Loaded");
-            }
-
-            if(!fileManager.save(family, "testFamily2", file, errorMessage)){
-                System.out.println(errorMessage.toString());
-            }
-            else{
-                System.out.println("Saved");
-            }
-        } catch( Exception e){
-            System.out.println(e.toString());
-        }
-
-
+        StateManager.getInstance().setFamily(family);
 
         setPersonPane(me);
         setGraphPane(me);
@@ -195,6 +171,18 @@ public class MainController {
 
 
 
+    }
+
+    // Action handlers =================================================================================================
+
+    /**
+     * Handles the saving of the current family by opening a file chooser and then saving the family.
+     * This also sets the current family file for the current family in the stateManager.
+     */
+    @FXML
+    private void saveAs(){
+        SaveAsCommand saveAsCommand = new SaveAsCommand(this.stage);
+        saveAsCommand.execute();
     }
 
 
@@ -289,6 +277,7 @@ public class MainController {
 
 
     private HashMap<Person, GraphNode> nodes;
+
     private Circle viewport = new Circle(150);
 
     private DoubleProperty portraitCenterX = new SimpleDoubleProperty();
@@ -296,6 +285,8 @@ public class MainController {
     private DoubleProperty portraitCenterY = new SimpleDoubleProperty();
 
     private DoubleProperty portriatRadius = new SimpleDoubleProperty();
+
+    private Stage stage;
 
     @FXML
     private TableView<String> index;

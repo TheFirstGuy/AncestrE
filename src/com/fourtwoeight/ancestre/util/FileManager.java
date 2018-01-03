@@ -28,7 +28,9 @@ public class FileManager {
 
     // Private Static Fields ===========================================================================================
 
-    private static Logger LOGGER = Logger.getLogger(FileManager.class.getName());
+    private static FileManager instance;
+
+    private static final Logger LOGGER = Logger.getLogger(FileManager.class.getName());
 
     private static String UUID = "uuid";
     private static String RELATIONSHIPS = "Relationships";
@@ -42,35 +44,14 @@ public class FileManager {
     // Public Methods ==================================================================================================
 
 
-    public FileManager(){
-
-    }
-
     /**
-     * Initializes the FileManager
+     * @return The singleton instance of the FileManager
      */
-    public void initialize(){
-        LOGGER.fine("Initializing FileManager.");
-        try {
-            // Set up person context and marshaller
-            this.personContext = JAXBContext.newInstance(Person.class);
-            this.personMarshaller = this.personContext.createMarshaller();
-            this.personMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-
-            // Set up family context and marshaller
-            this.familyContext = JAXBContext.newInstance(Family.class);
-            this.familyMarshaller = this.familyContext.createMarshaller();
-            this.familyMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            this.familyUnmarshaller = this.familyContext.createUnmarshaller();
-
-            // Set up DocumentBuilderFactory
-            this.documentBuilderFactory = DocumentBuilderFactory.newInstance();
-
-            // Set up TransformerFactory
-            this.transformerFactory = TransformerFactory.newInstance();
-        } catch (JAXBException e) {
-            LOGGER.severe("Unable to initialize FileManager. Caught Exception: " + e);
+    public static FileManager getInstance() {
+        if(instance == null){
+            instance = new FileManager();
         }
+        return instance;
     }
 
     /**
@@ -178,7 +159,7 @@ public class FileManager {
                 familyOutputStream.close();
             } catch (Exception e){
                 errorMsg.append("Unable to save .fam file.");
-                LOGGER.severe("Caught exceptiion: " + e.toString());
+                LOGGER.severe("Caught exception: " + e.toString());
             }
 
             // Save the relationship file
@@ -209,17 +190,45 @@ public class FileManager {
     // Private Methods =================================================================================================
 
     /**
+     * Private Constructor
+     */
+    private FileManager(){
+        LOGGER.fine("Initializing FileManager.");
+        try {
+            // Set up person context and marshaller
+            this.personContext = JAXBContext.newInstance(Person.class);
+            this.personMarshaller = this.personContext.createMarshaller();
+            this.personMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+
+            // Set up family context and marshaller
+            this.familyContext = JAXBContext.newInstance(Family.class);
+            this.familyMarshaller = this.familyContext.createMarshaller();
+            this.familyMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+            this.familyUnmarshaller = this.familyContext.createUnmarshaller();
+
+            // Set up DocumentBuilderFactory
+            this.documentBuilderFactory = DocumentBuilderFactory.newInstance();
+
+            // Set up TransformerFactory
+            this.transformerFactory = TransformerFactory.newInstance();
+        } catch (JAXBException e) {
+            LOGGER.severe("Unable to initialize FileManager. Caught Exception: " + e);
+        }
+    }
+
+    /**
      * Saves a family object to the provided fileStream
      * @param family the family to be saved
      * @param fileStream the file to be saved too
      * @return Whether the family was saved successfully
      */
     private boolean saveFamily(Family family, FileOutputStream fileStream){
+        LOGGER.fine("Entering saveFamily()");
         boolean saved = false;
         try {
             familyMarshaller.marshal(family, fileStream);
             saved = true;
-        } catch (JAXBException e) {
+        } catch (Exception e) {
             LOGGER.severe("Unable to save family: " + family.getFamilyName() + ". Caught Exception: " + e);
         }
         return saved;
